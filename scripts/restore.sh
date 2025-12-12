@@ -46,7 +46,8 @@ docker exec "${PG_CONTAINER}" bash -lc "createdb -U '${PG_USER}' '${DB_NAME}'"
 
 # 6) Restaurar datos
 echo "==> Restaurando datos desde ${BACKUP_SQL}..."
-docker exec -i "${PG_CONTAINER}" psql -U "${PG_USER}" -d "${DB_NAME}" -v ON_ERROR_STOP=on < "${BACKUP_SQL}"
+sed -E '/^\\restrict [A-Za-z0-9]+$/d;/^\\unrestrict [A-Za-z0-9]+$/d'  "${BACKUP_SQL}" > "${BACKUP_SQL%.sql}.clean.sql"
+docker exec -i "${PG_CONTAINER}" psql -U "${PG_USER}" -d "${DB_NAME}" -v ON_ERROR_STOP=on \ < "${BACKUP_SQL%.sql}.clean.sql"
 echo "Restauración completada."
 
 # 7) Espera fija antes de arrancar Odoo

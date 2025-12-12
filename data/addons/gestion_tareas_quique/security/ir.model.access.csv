@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_gestion_tareas_quique_tareas_quique,gestion_tareas_quique.tareas_quique,model_gestion_tareas_quique_tareas_quique,base.group_user,1,1,1,1
+access_gestion_tareas_quique_sprints_quique,gestion_tareas_quique.sprints_quique,model_gestion_tareas_quique_sprints_quique,base.group_user,1,1,1,1
+access_gestion_tareas_quique_tecnologias_quique,gestion_tareas_quique.tecnologias_quique,model_gestion_tareas_quique_tecnologias_quique,base.group_user,1,1,1,1
