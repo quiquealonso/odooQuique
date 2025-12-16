@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_gest_rest_platos_quique,gest_rest.platos_quique,model_gest_rest_platos_quique,base.group_user,1,1,1,1
+access_gest_rest_menu_quique,gest_rest.menu_quique,model_gest_rest_menu_quique,base.group_user,1,1,1,1
+access_gest_rest_ingrediente_quique,gest_rest.ingrediente_quique,model_gest_rest_ingrediente_quique,base.group_user,1,1,1,1
+

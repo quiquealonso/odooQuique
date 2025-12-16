@@ -1,0 +1,75 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+
+    <record model="ir.ui.view" id="gest_rest.list">
+      <field name="name">gest_rest list</field>
+      <field name="model">gest_rest.platos_quique</field>
+      <field name="arch" type="xml">
+        <list>
+          <field name="name"/>
+          <field name="description"/>
+          <field name="precio"/>
+          <field name="tiempo_preparacion"/>
+          <field name="disponible"/>
+          <field name="categoria"/>
+        </list>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+
+    <record model="ir.actions.act_window" id="gest_rest.abrir_platos">
+      <field name="name">gest_rest window</field>
+      <field name="res_model">gest_rest.platos_quique</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="gest_rest.abrir_menu">
+      <field name="name">gest_rest window</field>
+      <field name="res_model">gest_rest.menu_quique</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="gest_rest.abrir_ingredientes">
+      <field name="name">gest_rest window</field>
+      <field name="res_model">gest_rest.ingrediente_quique</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="gest_rest.action_server">
+      <field name="name">gest_rest server</field>
+      <field name="model_id" ref="model_gest_rest_gest_rest"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "list,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+
+    <menuitem name="gest_rest" id="gest_rest.menu_root"/>
+
+    <!-- menu categories -->
+    <menuitem name="Menu" id="gest_rest.menu" parent="gest_rest.menu_root"/>
+<!--
+    <menuitem name="Menu 2" id="gest_rest.menu_2" parent="gest_rest.menu_root"/>
+-->
+    <!-- actions -->
+    <menuitem name="Platos" id="gest_rest.platos" parent="gest_rest.menu"
+              action="gest_rest.abrir_platos"/>
+    <menuitem name="Menus" id="gest_rest.manu" parent="gest_rest.menu"
+              action="gest_rest.abrir_menu"/>
+    <menuitem name="Ingredientes" id="gest_rest.ingre" parent="gest_rest.menu"
+              action="gest_rest.abrir_ingredientes"/>
+
+  </data>
+</odoo>
