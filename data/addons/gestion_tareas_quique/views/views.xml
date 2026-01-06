@@ -10,7 +10,6 @@
           <field name="nombre"/>
           <field name="descripcion"/>
           <field name="finalizado"/>
-
         </list>
       </field>
     </record>
@@ -22,6 +21,7 @@
         <form>
           <sheet>
             <group>
+             <field name="codigo"/>
               <field name="nombre"/>
               <field name="descripcion"/>
               <field name="finalizado"/>

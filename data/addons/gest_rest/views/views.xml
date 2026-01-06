@@ -7,12 +7,16 @@
       <field name="model">gest_rest.platos_quique</field>
       <field name="arch" type="xml">
         <list>
+          <field name="codigo"/>
           <field name="name"/>
           <field name="description"/>
           <field name="precio"/>
           <field name="tiempo_preparacion"/>
           <field name="disponible"/>
           <field name="categoria"/>
+          <field name="precio_con_iva"/>
+          <field name="precio_final"/>
+          <field name="ingredientes" widget="many2many_tags"/>
         </list>
       </field>
     </record>
