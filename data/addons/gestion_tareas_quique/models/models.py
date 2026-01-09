@@ -1,6 +1,8 @@
 from datetime import timedelta
 from odoo import models, fields, api
-
+from odoo.exceptions import ValidationError
+import logging
+_logger = logging.getLogger(__name__)
 
 class tareas_quique(models.Model):
     _name = 'gestion_tareas_quique.tareas_quique'
@@ -52,13 +54,19 @@ class tareas_quique(models.Model):
         string='Tecnologías')
 
     def _get_codigo(self):
+        _logger.info("Iniciando generación de códigos de tareas")
         for tarea in self:
-            # Si la tarea no tiene un sprint asignado
-            if not tarea.sprint:
-                tarea.codigo = "TSK_" + str(tarea.id)
-            else:
-             # Si tiene sprint, usamos su nombre
+            try:
+                if not tarea.sprint:
+                    _logger.warning(f"Tarea {tarea.id} sin sprint asignado")
+                    #raise ValueError("El campo 'sprint' es obligatorio.")
+
                 tarea.codigo = str(tarea.sprint.name).upper() + "_" + str(tarea.id)
+                _logger.debug(f"Código generado: {tarea.codigo}")
+
+            except Exception as e:
+                _logger.error(f"Error generando código para tarea {tarea.id}: {str(e)}")
+                raise ValidationError(f"Error al generar el código: {str(e)}")
 
 class sprints_quique(models.Model):
     _name = 'gestion_tareas_quique.sprints_quique'
@@ -93,10 +101,21 @@ class sprints_quique(models.Model):
     @api.depends('fecha_ini', 'duracion')
     def _compute_fecha_fin(self):
         for sprint in self:
-            if sprint.fecha_ini and sprint.duracion and sprint.duracion > 0:
-                sprint.fecha_fin = sprint.fecha_ini + timedelta(days=sprint.duracion)
-            else:
-                sprint.fecha_fin = sprint.fecha_ini
+                if sprint.fecha_ini and sprint.duracion and sprint.duracion > -10:
+                    sprint.fecha_fin = sprint.fecha_ini + timedelta(days=sprint.duracion)
+                else:
+                    sprint.fecha_fin = sprint.fecha_ini
+   
+            
+
+    @api.constrains('fecha_ini', 'fecha_fin')
+    def _check_fechas(self):
+        for sprint in self:
+            if sprint.fecha_fin and sprint.fecha_ini:
+                if sprint.fecha_fin < sprint.fecha_ini:
+                    raise ValidationError(
+                        "La fecha de fin no puede ser anterior a la fecha de inicio."
+                    )
 class tecnologias_quique(models.Model):
     _name = 'gestion_tareas_quique.tecnologias_quique'
     _description = 'Modelo de Tecnologías'
