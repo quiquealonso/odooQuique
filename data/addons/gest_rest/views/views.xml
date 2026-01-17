@@ -13,10 +13,11 @@
           <field name="precio"/>
           <field name="tiempo_preparacion"/>
           <field name="disponible"/>
-          <field name="categoria"/>
+          <field name="categoria_ids" widget="many2one_tags"/>
           <field name="precio_con_iva"/>
           <field name="precio_final"/>
           <field name="ingredientes" widget="many2many_tags"/>
+          <field name="chef_ids" widget="many2one_tags"/>
         </list>
       </field>
     </record>
@@ -38,6 +39,18 @@
     <record model="ir.actions.act_window" id="gest_rest.abrir_ingredientes">
       <field name="name">gest_rest window</field>
       <field name="res_model">gest_rest.ingrediente_quique</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="gest_rest.abrir_categoria">
+      <field name="name">gest_rest window</field>
+      <field name="res_model">gest_rest.categoria_quique</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="gest_rest.abrir_chef">
+      <field name="name">gest_rest window</field>
+      <field name="res_model">gest_rest.chef_quique</field>
       <field name="view_mode">list,form</field>
     </record>
 
@@ -70,10 +83,14 @@
     <!-- actions -->
     <menuitem name="Platos" id="gest_rest.platos" parent="gest_rest.menu"
               action="gest_rest.abrir_platos"/>
-    <menuitem name="Menus" id="gest_rest.manu" parent="gest_rest.menu"
-              action="gest_rest.abrir_menu"/>
+    <menuitem name="Menus" id="gest_rest.menu_menus" parent="gest_rest.menu"
+          action="gest_rest.abrir_menu"/>
     <menuitem name="Ingredientes" id="gest_rest.ingre" parent="gest_rest.menu"
               action="gest_rest.abrir_ingredientes"/>
+    <menuitem name="Categoria" id="gest_rest.categoria" parent="gest_rest.menu"
+              action="gest_rest.abrir_categoria"/>
+    <menuitem name="Chef" id="gest_rest.chef" parent="gest_rest.menu"
+              action="gest_rest.abrir_chef"/>
 
   </data>
 </odoo>

@@ -7,9 +7,11 @@
       <field name="model">gestion_tareas_quique.tareas_quique</field>
       <field name="arch" type="xml">
         <list>
+          <field name ="codigo"/>
           <field name="nombre"/>
           <field name="descripcion"/>
           <field name="finalizado"/>
+          <field name ="proyecto_ids"/>
         </list>
       </field>
     </record>
@@ -25,6 +27,8 @@
               <field name="nombre"/>
               <field name="descripcion"/>
               <field name="finalizado"/>
+              <field name ="historia"/>
+              <field name ="proyecto_ids"/>
             </group>
             <group>
               <field name="fecha_creacion"/>
@@ -52,6 +56,18 @@
       <field name="view_mode">list,form</field>
     </record>
 
+    <record model="ir.actions.act_window" id="gestion_tareas_quique.action_historias_window">
+      <field name="name">gestion_historias_quique window</field>
+      <field name="res_model">gestion_tareas_quique.historias_quique</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="gestion_tareas_quique.action_proyectos_window">
+      <field name="name">gestion_proyectos_quique window</field>
+      <field name="res_model">gestion_tareas_quique.proyectos_quique</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
 
     <!-- server action to the one above -->
 <!--
@@ -74,9 +90,12 @@
     <menuitem name="Gestor Tareas" id="gestion_tareas_quique.menu_root"/>
 
     <!-- menu categories -->
+    <menuitem name="Proyectos" id="gestion_tareas_quique.proyectos" parent="gestion_tareas_quique.menu_root" sequence="10"/>
+    <menuitem name="Historias" id="gestion_tareas_quique.historias" parent="gestion_tareas_quique.menu_root" sequence="20"/>
+    <menuitem name="Tareas" id="gestion_tareas_quique.tareas" parent="gestion_tareas_quique.menu_root" sequence="30"/>
+    <menuitem name="Sprints" id="gestion_tareas_quique.sprints" parent="gestion_tareas_quique.menu_root" sequence="40"/>
 
-    <menuitem name="Tareas" id="gestion_tareas_quique.tareas" parent="gestion_tareas_quique.menu_root"/>
-    <menuitem name="Sprints" id="gestion_tareas_quique.sprints" parent="gestion_tareas_quique.menu_root"/>
+
 
     <!-- actions -->
 
@@ -85,6 +104,13 @@
 
     <menuitem name="Listado Sprints" id="gestion_tareas_quique.sprints_list" parent="gestion_tareas_quique.sprints"
               action="gestion_tareas_quique.action_sprints_window"/>
+    
+    <menuitem name="Listado Historias" id="gestion_tareas_quique.historias_list" parent="gestion_tareas_quique.historias"
+              action="gestion_tareas_quique.action_historias_window"/>
+      
+    <menuitem name="Listado Proyectos" id="gestion_tareas_quique.proyectos_list" parent="gestion_tareas_quique.proyectos"
+              action="gestion_tareas_quique.action_proyectos_window"/>
+    
 
   </data>
 </odoo>
