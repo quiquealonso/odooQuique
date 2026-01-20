@@ -1,6 +1,7 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError, UserError
 import logging
+from datetime import timedelta
 _logger = logging.getLogger(__name__)
 
 
@@ -25,7 +26,8 @@ class platos_quique(models.Model):
      precio = fields.Float(
           string='Precio del plato',
           required=True,
-          help='Precio del plato que se ofrece en el restaurante'
+          help='Precio del plato que se ofrece en el restaurante',
+          default=5.0
      )
 
      disponible = fields.Boolean(
@@ -40,8 +42,13 @@ class platos_quique(models.Model):
 
      descuento = fields.Float(
           string='Descuento (%)',
+          defautl=0.0,
      )
       
+     fecha_alta = fields.Date(
+          string='Fecha de alta del plato',
+          default=lambda self: fields.Date.today(self),    
+     )   
 
      # CAMPOS COMPUTADOS  -----------------------------------------------------------
      precio_final = fields.Float(
@@ -58,7 +65,8 @@ class platos_quique(models.Model):
                string="Codigo"
           )
      
-     
+     def _get_categoria_defecto(self):
+         return self.env['gest_rest.categoria_quique'].search([('name', '=', 'Sin Clasificar')], limit=1)
 
      # CAMPOS RELACIONADOS ---------------------------------------------------------
      menu = fields.Many2one(
@@ -70,6 +78,7 @@ class platos_quique(models.Model):
           'gest_rest.categoria_quique',
           string='Categoría del plato',
           ondelete='set null',
+          default = _get_categoria_defecto
      )
 
      chef_ids = fields.Many2one(
@@ -183,24 +192,50 @@ class menu_quique(models.Model):
 
      fecha_inicio = fields.Date(
           string='Fecha inicio del menú',
-          help='Platos incluidos en este menú'
+          help='Platos incluidos en este menú',
+          default=fields.Date.today
+     )
+
+     dias_disponibles = fields.Integer(
+          string ='Días disponibles del menú',
+          default=7,
      )
 
      fecha_fin = fields.Date(
+          compute='_compute_finalizacion',
           string='Fecha de fin del menú',
-          required=True,
-          help='Fecha en la que este menú deja de estar disponible'
+          store=True,
+          help='Fecha en la que este menú deja de estar disponible',
      )
 
      activo = fields.Boolean(
-          default=True
+          default=False
      )
+
+     @api.depends('fecha_inicio', 'dias_disponibles')
+     def _compute_finalizacion(self):
+          for menu in self:
+               fecha_base = menu.fecha_inicio or fields.Date.today()
+               dias = menu.dias_disponibles or 7
+               menu.fecha_fin = fecha_base + timedelta(days=dias)
+
+
+     
+
+
 
      # CAMPO RELACIONADO ---------------------------------------------------------
      platos = fields.One2many(
           'gest_rest.platos_quique',
           'menu',
           string='Platos del menú'
+     )
+
+     creado_por = fields.Many2one(
+          'res.users',
+          string= 'Creado por',
+          default=lambda self: self.env.user.id,
+          readonly=True,
      )
      # CAMPO COMPUTADO -----------------------------------------------------------
      precio_total = fields.Float(

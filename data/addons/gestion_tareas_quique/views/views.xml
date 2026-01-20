@@ -12,6 +12,8 @@
           <field name="descripcion"/>
           <field name="finalizado"/>
           <field name ="proyecto_ids"/>
+          <field name ="proyecto_default"/>
+
         </list>
       </field>
     </record>
@@ -29,6 +31,8 @@
               <field name="finalizado"/>
               <field name ="historia"/>
               <field name ="proyecto_ids"/>
+              <field name ="responsable"/>
+              <field name ="proyecto_default"/>
             </group>
             <group>
               <field name="fecha_creacion"/>

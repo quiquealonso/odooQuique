@@ -6,6 +6,31 @@ from datetime import datetime
 import logging
 _logger = logging.getLogger(__name__)
 
+
+class proyectos_quique(models.Model):
+    _name = 'gestion_tareas_quique.proyectos_quique'
+    _description = 'Modelo de Proyectos para Gestión de Proyectos'
+
+    name = fields.Char(
+        string="Nombre", 
+        required=True, 
+        help="Introduzca el nombre del proyecto")
+
+    descripcion = fields.Text(
+        string="Descripción", 
+        help="Breve descripción del proyecto")
+    
+    
+    historias = fields.One2many(
+        'gestion_tareas_quique.historias_quique', 
+        'proyecto', 
+        string='Historias de usuario del proyecto')
+    
+    activo = fields.Boolean(
+        string= "Estado del proyecto",
+        default = True
+    ) 
+
 class tareas_quique(models.Model):
     _name = 'gestion_tareas_quique.tareas_quique'
     _description = 'gestion_tareas_quique.tareas_quique'
@@ -23,9 +48,13 @@ class tareas_quique(models.Model):
     descripcion = fields.Text(
         string="Descripción", 
         help="Breve descripción de la tarea")
-
+      
+    #def _get_fecha_actual(self):
+    #    return datetime.now()
+    
     fecha_creacion = fields.Date(
         string="Fecha Creación", 
+        default=lambda self: datetime.now(),
         required=True, 
         help="Fecha en la que se dio de alta la tarea")
 
@@ -42,6 +71,11 @@ class tareas_quique(models.Model):
         string="Finalizado", 
         help="Indica si la tarea ha sido finalizada o no")
     
+    responsable = fields.Many2one(
+        'res.users',
+        string='Responsable',
+        default=lambda self: self.env.user.id)
+
    # sprint = fields.Many2one(
     #    'gestion_tareas_quique.sprints_quique', 
      #   string='Sprint relacionado', 
@@ -72,10 +106,21 @@ class tareas_quique(models.Model):
         string='Proyecto',
         related='historia.proyecto',
         readonly=True)
-        
     
+    def _get_proyecto_activo(self):
+        """Retorna el proyecto marcado como activo"""
+        return self.env['gestion_tareas_quique.proyectos_quique'].search(
+        [('activo', '=', True)], 
+        limit=1, order='create_date desc')
+    
+    proyecto_default = fields.Many2one(
+    'gestion_tareas_quique.proyectos_quique',
+    string='Proyecto',
+    default=_get_proyecto_activo)
+
+
     @api.depends('sprint', 'sprint.name')   # solo se ejecuta si cambia el sprint.
-    def _get_codigo(self):
+    def _get_codigo(self):  
         _logger.info("Iniciando generación de códigos de tareas")
 
         for tarea in self:
@@ -132,9 +177,12 @@ class sprints_quique(models.Model):
         string="Fecha Inicio", 
         required=True, 
         help="Fecha y hora de inicio del sprint")
+
     duracion = fields.Integer(
         string="Duración", 
+        default=14,
         help="Cantidad de días que tiene asignado el sprint")
+
     fecha_fin = fields.Datetime(
         compute='_compute_fecha_fin', 
         store=True,
@@ -196,24 +244,7 @@ class tecnologias_quique(models.Model):
         column2='rel_tareas',
         string='Tareas')
 
-class proyectos_quique(models.Model):
-    _name = 'gestion_tareas_quique.proyectos_quique'
-    _description = 'Modelo de Proyectos para Gestión de Proyectos'
 
-    name = fields.Char(
-        string="Nombre", 
-        required=True, 
-        help="Introduzca el nombre del proyecto")
-
-    descripcion = fields.Text(
-        string="Descripción", 
-        help="Breve descripción del proyecto")
-    
-    
-    historias = fields.One2many(
-        'gestion_tareas_quique.historias_quique', 
-        'proyecto', 
-        string='Historias de usuario del proyecto')
 
 class historias_quique(models.Model):
     _name = 'gestion_tareas_quique.historias_quique'
