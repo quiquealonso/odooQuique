@@ -274,7 +274,13 @@ class historias_quique(models.Model):
         "gestion_tareas_quique.tecnologias_quique", 
         compute="_compute_tecnologias", 
         string="Tecnologías Utilizadas")
-
+    
+    desarrolladores_ids = fields.Many2many(
+        comodel_name = 'res.partner',
+        relation = 'rel_dev_tec',
+        column1 = 'tecnologia_id',
+        column2 = 'desarrollador_id',
+    )
     @api.depends('tareas', 'tareas.rel_tecnologias')
     def _compute_tecnologias(self):
         for historia in self:
@@ -288,6 +294,18 @@ class historias_quique(models.Model):
             # Asignar el resultado
             historia.tecnologias = tecnologias_acumuladas
 
-    
+class desarrolladores_quique(models.Model):
+    _name = 'res.partner'
+    _inherit = 'res.partner'
 
+    es_desarrollador = fields.Boolean(
+        string="Desarrollador", 
+    )
     
+    tecnologias_ids = fields.Many2many(
+        comodel_name='gestion_tareas_quique.tecnologias_quique',
+        relation='rel_dev_tec',
+        column1='desarrollador_id',
+        column2='tecnologia_id',
+        string = 'Tecnologías'
+    )

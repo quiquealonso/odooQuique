@@ -95,6 +95,7 @@
               action="gest_rest.abrir_categoria"/>
     <menuitem name="Chef" id="gest_rest.chef" parent="gest_rest.menu"
               action="gest_rest.abrir_chef"/>
+    
 
   </data>
 </odoo>

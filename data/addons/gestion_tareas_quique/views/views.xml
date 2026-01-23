@@ -46,6 +46,26 @@
       </field>
     </record>
 
+
+     <record model="ir.ui.view" id="gestion_tareas_quique.view_partner_form_inherit">
+      <field name="name">desarrolladores form</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="base.view_partner_form"/>
+      <field name="mode">primary</field>
+      <field name="arch" type="xml">
+          <xpath expr="//sheet/notebook/page[@name='internal_notes']" position="after">
+            <page name="devs" string="Datos Desarrollador">
+                <group>
+                    <group>
+                        <field name="tecnologias_ids" widget="many2many_tags"/>`
+                        <field name ="es_desarrollador"/>
+                    </group>
+                </group>
+            </page>
+          </xpath> 
+      </field>
+    </record>
+
     <!-- actions opening views on models -->
 
     <record model="ir.actions.act_window" id="gestion_tareas_quique.action_tareas_window">
@@ -72,6 +92,27 @@
       <field name="view_mode">list,form</field>
     </record>
 
+    <record model="ir.actions.act_window" id="gestion_tareas_quique.action_desarrolladores_window">
+      <field name="name">desarrolladores window</field>
+      <field name="res_model">res.partner</field>
+      <field name="view_mode">list,form</field>
+    </record> 
+
+
+    <record model="ir.actions.act_window.view" id="action_view_desarrolladores_list">
+      <field name="sequence" eval="1"/>
+      <field name="view_mode">list</field>
+      <field name="view_id" ref="base.view_partner_tree"/>
+      <field name="act_window_id" ref="gestion_tareas_quique.action_desarrolladores_window"/>
+    </record>
+
+
+    <record model="ir.actions.act_window.view" id="action_view_desarrolladores_form">
+      <field name="sequence" eval="2"/>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="gestion_tareas_quique.view_partner_form_inherit"/>
+      <field name="act_window_id" ref="gestion_tareas_quique.action_desarrolladores_window"/>
+    </record>
 
     <!-- server action to the one above -->
 <!--
@@ -98,6 +139,7 @@
     <menuitem name="Historias" id="gestion_tareas_quique.historias" parent="gestion_tareas_quique.menu_root" sequence="20"/>
     <menuitem name="Tareas" id="gestion_tareas_quique.tareas" parent="gestion_tareas_quique.menu_root" sequence="30"/>
     <menuitem name="Sprints" id="gestion_tareas_quique.sprints" parent="gestion_tareas_quique.menu_root" sequence="40"/>
+    <menuitem name="Desarrolladores" id="gestion_tareas_quique.desarrolladores" parent="gestion_tareas_quique.menu_root" sequence="50"/>
 
 
 
@@ -114,6 +156,9 @@
       
     <menuitem name="Listado Proyectos" id="gestion_tareas_quique.proyectos_list" parent="gestion_tareas_quique.proyectos"
               action="gestion_tareas_quique.action_proyectos_window"/>
+
+    <menuitem name="Listado Desarrolladores" id="gestion_tareas_quique.desarrolladores_list" parent="gestion_tareas_quique.desarrolladores"
+              action="gestion_tareas_quique.action_desarrolladores_window"/>
     
 
   </data>
