@@ -1,7 +1,6 @@
 <odoo>
   <data>
     <!-- explicit list view definition -->
-
     <record model="ir.ui.view" id="gest_rest.list">
       <field name="name">gest_rest list</field>
       <field name="model">gest_rest.platos_quique</field>
@@ -26,6 +25,38 @@
       </field>
     </record>
 
+   <record model="ir.ui.view" id="gest_rest.view_partner_form_inherit">
+    <field name="name">camareros form</field>
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_partner_form"/>
+    <field name="mode">primary</field>
+    <field name="arch" type="xml"> 
+        <xpath expr="//field[@name='vat']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
+
+        <xpath expr="//page[@name='contact_addresses']" position="attributes">
+            <attribute name="invisible">1</attribute> 
+        </xpath>
+
+        <xpath expr="//field[@name='function']" position="after">
+            <field name="seccion"/>
+        </xpath>
+
+        <xpath expr="//page[@name='internal_notes']" position="after">
+            <page name="camarero" string="Datos Camarero" invisible="not es_camarero">
+                <group>
+                    <group>
+                        <field name="es_camarero" invisible="1"/> 
+                        <field name="turno"/>
+                        <field name="menu_especialidad" widget="many2many_tags"/>
+                    </group>
+                </group>
+            </page>
+        </xpath>
+
+    </field>
+</record>
     <!-- actions opening views on models -->
 
     <record model="ir.actions.act_window" id="gest_rest.abrir_platos">
@@ -56,6 +87,29 @@
       <field name="name">gest_rest window</field>
       <field name="res_model">gest_rest.chef_quique</field>
       <field name="view_mode">list,form</field>
+    </record>
+
+  <!--camaero-->
+  <record model="ir.actions.act_window" id="gest_rest.abrir_camarero">
+      <field name="name">gest_rest window</field>
+      <field name="res_model">res.partner</field>
+      <field name="view_mode">list,form</field>
+      <field name="domain">[("es_camarero", "=", True)]</field>
+      <field name="context">{'default_es_camarero': True}</field>
+    </record>
+
+    
+    <record model="ir.actions.act_window.view" id="action_view_camareros_list">
+      <field name="sequence" eval="1"/>
+      <field name="view_mode">list</field>
+      <field name="view_id" ref="base.view_partner_tree"/>
+      <field name="act_window_id" ref="gest_rest.abrir_camarero"/>
+    </record>
+    <record model="ir.actions.act_window.view" id="gest_rest.action_camareros_form">
+      <field name="sequence" eval="2"/>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="gest_rest.view_partner_form_inherit"/>
+      <field name="act_window_id" ref="gest_rest.abrir_camarero"/>
     </record>
 
 
@@ -95,6 +149,8 @@
               action="gest_rest.abrir_categoria"/>
     <menuitem name="Chef" id="gest_rest.chef" parent="gest_rest.menu"
               action="gest_rest.abrir_chef"/>
+    <menuitem name="Camarero" id="gest_rest.camarero" parent="gest_rest.menu"
+              action="gest_rest.abrir_camarero"/>
     
 
   </data>

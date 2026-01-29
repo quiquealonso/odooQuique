@@ -33,6 +33,11 @@
               <field name ="proyecto_ids"/>
               <field name ="responsable"/>
               <field name ="proyecto_default"/>
+              <field name = "desarrollador_ids" domain="[('es_desarrollador', '=', True)]"  
+              context="{
+                'form_view_ref': 'gestion_tareas_quique.view_partner_form_inherit',
+                'default_es_desarrollador': True
+              }"/>
             </group>
             <group>
               <field name="fecha_creacion"/>
@@ -54,11 +59,22 @@
       <field name="mode">primary</field>
       <field name="arch" type="xml">
           <xpath expr="//sheet/notebook/page[@name='internal_notes']" position="after">
-            <page name="devs" string="Datos Desarrollador">
+
+          <xpath expr="//field[@name='website']" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </xpath>
+
+          <xpath expr="//page[@name='sales_purchases']" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </xpath>
+          
+            <page name="devs" string="Datos Desarrollador"
+             invisible="not es_desarrollador">
+
                 <group>
                     <group>
+                        <field name="es_desarrollador" readonly="1"/> 
                         <field name="tecnologias_ids" widget="many2many_tags"/>`
-                        <field name ="es_desarrollador"/>
                     </group>
                 </group>
             </page>
@@ -96,6 +112,8 @@
       <field name="name">desarrolladores window</field>
       <field name="res_model">res.partner</field>
       <field name="view_mode">list,form</field>
+      <field name="domain">[('es_desarrollador','=',True)]</field>
+      <field name="context">{'default_es_desarrollador': True}</field>
     </record> 
 
 
@@ -159,6 +177,8 @@
 
     <menuitem name="Listado Desarrolladores" id="gestion_tareas_quique.desarrolladores_list" parent="gestion_tareas_quique.desarrolladores"
               action="gestion_tareas_quique.action_desarrolladores_window"/>
+
+    
     
 
   </data>

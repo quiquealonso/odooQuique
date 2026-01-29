@@ -373,3 +373,40 @@ class chef_quique(models.Model):
           'chef_ids',
           string='Platos asignados al chef'
      )
+
+class camarero_quique(models.Model):
+           
+     _name = 'res.partner'
+     _inherit ='res.partner'     
+
+     es_camarero = fields.Boolean(
+          string='Camarero',
+     )
+
+     turno = fields.Selection(
+          [('manana', 'Mañana'),
+          ('tarde', 'Tarde'),
+          ('noche', 'Noche')],
+          string='Turno del camarero',
+     )
+
+     seccion = fields.Char(
+          string='Sección asignada',      
+     )
+
+     menu_especialidad = fields.Many2many(
+          'gest_rest.menu_quique',
+     )
+
+     @api.onchange('es_camarero')
+     def _onchange_es_camarero(self):
+          # Buscar la categoría "Camarero"
+          categorias = self.env['res.partner.category'].search([('name', '=', 'Camarero')])
+
+          if len(categorias) > 0:
+               category = categorias[0]
+          else:
+               category = self.env['res.partner.category'].create({'name': 'Camarero'})
+
+          # Asignar la categoría al contacto
+          self.category_id = [(4, category.id)]
