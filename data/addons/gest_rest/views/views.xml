@@ -1,5 +1,6 @@
 <odoo>
   <data>
+    
     <!-- explicit list view definition -->
     <record model="ir.ui.view" id="gest_rest.list">
       <field name="name">gest_rest list</field>
@@ -17,7 +18,6 @@
           <field name="menu"/>
           <field name="categoria_ids" widget="many2one_tags"/>
           <field name="precio_con_iva"/>
-          <field name="precio_final"/>
           <field name="ingredientes" widget="many2many_tags"/>
           <field name="chef_ids" widget="many2one_tags"/>
           <field name="chef_especializado"/>
@@ -25,6 +25,7 @@
       </field>
     </record>
 
+  <!--Vista del res partner heredada para camareros-->
    <record model="ir.ui.view" id="gest_rest.view_partner_form_inherit">
     <field name="name">camareros form</field>
     <field name="model">res.partner</field>
@@ -34,15 +35,12 @@
         <xpath expr="//field[@name='vat']" position="attributes">
             <attribute name="invisible">1</attribute>
         </xpath>
-
         <xpath expr="//page[@name='contact_addresses']" position="attributes">
             <attribute name="invisible">1</attribute> 
         </xpath>
-
         <xpath expr="//field[@name='function']" position="after">
             <field name="seccion"/>
         </xpath>
-
         <xpath expr="//page[@name='internal_notes']" position="after">
             <page name="camarero" string="Datos Camarero" invisible="not es_camarero">
                 <group>
@@ -54,15 +52,73 @@
                 </group>
             </page>
         </xpath>
-
     </field>
-</record>
-    <!-- actions opening views on models -->
+  </record>
 
+  <record model="ir.ui.view" id="gest_rest.view_menu_list">
+      <field name="name">gest_rest menu list</field>
+      <field name="model">gest_rest.menu_quique</field>
+      <field name="arch" type="xml">
+        <list decoration-info="activo" decoration-muted="finalizado" decoration-warning="proximo_a_vencer">
+          <field name="name"/>
+          <field name="fecha_inicio"/>
+          <field name="fecha_fin"/>
+          <field name="activo"/>
+          <field name="precio_total" sum="Total menús"/>
+        </list>
+      </field>
+    </record>
+
+  <!-- Vista de lista para ingredientes -->
+    <record model="ir.ui.view" id="gest_rest.view_ingrediente_list">
+      <field name="name">gest_rest ingrediente list</field>
+      <field name="model">gest_rest.ingrediente_quique</field>
+      <field name="arch" type="xml">
+        <list decoration-danger="es_alergeno == True" editable="top">
+          <field name="name"/>
+          <field name="es_alergeno"/>
+          <field name="description"/>
+        </list>
+      </field>
+    </record>
+
+  <!-- MENU PARA PLATOS-->
+  <record model="ir.ui.view" id="gest_rest.view_platos_list">
+      <field name="name">gest_rest list</field>
+      <field name="model">gest_rest.platos_quique</field>
+      <field name="arch" type="xml">
+        <list decoration-muted="not disponible" decoration-success="descuento &gt; 0" decoration-warning="es_caro">
+          <field name="name"/>
+          <field name="precio"/>
+          <field name="descuento"/>
+          <field name="categoria_ids"/>
+          <field name="precio_final" sum="Total ingresos"/>
+          <field name="disponible"/> 
+        </list>
+      </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="gest_rest.abrir_ingredientes">
+      <field name="name">gest_rest window</field>
+      <field name="res_model">gest_rest.ingrediente_quique</field>
+      <field name="view_mode">list,form</field>
+      <field name="view_id" ref="gest_rest.view_ingrediente_list"/>
+    </record>
+
+    <record model="ir.actions.act_window" id="gest_rest.abrir_menu">
+      <field name="name">gest_rest menu window</field>
+      <field name="res_model">gest_rest.menu_quique</field>
+      <field name="view_mode">list,form</field>
+      <field name="view_id" ref="gest_rest.view_menu_list"/>
+    </record>
+
+    <!-- apertura de los modelos -->
     <record model="ir.actions.act_window" id="gest_rest.abrir_platos">
       <field name="name">gest_rest window</field>
       <field name="res_model">gest_rest.platos_quique</field>
       <field name="view_mode">list,form</field>
+      <field name="view_id" ref="gest_rest.view_platos_list"/>
     </record>
 
     <record model="ir.actions.act_window" id="gest_rest.abrir_menu">
@@ -98,7 +154,6 @@
       <field name="context">{'default_es_camarero': True}</field>
     </record>
 
-    
     <record model="ir.actions.act_window.view" id="action_view_camareros_list">
       <field name="sequence" eval="1"/>
       <field name="view_mode">list</field>
@@ -135,12 +190,10 @@
 
     <!-- menu categories -->
     <menuitem name="Menu" id="gest_rest.menu" parent="gest_rest.menu_root"/>
-<!--
-    <menuitem name="Menu 2" id="gest_rest.menu_2" parent="gest_rest.menu_root"/>
--->
+
     <!-- actions -->
-    <menuitem name="Platos" id="gest_rest.platos" parent="gest_rest.menu"
-              action="gest_rest.abrir_platos"/>
+    <menuitem name="Platos" id="gest_rest.menu_platos" parent="gest_rest.menu"
+          action="gest_rest.abrir_platos"/>
     <menuitem name="Menus" id="gest_rest.menu_menus" parent="gest_rest.menu"
           action="gest_rest.abrir_menu"/>
     <menuitem name="Ingredientes" id="gest_rest.ingre" parent="gest_rest.menu"

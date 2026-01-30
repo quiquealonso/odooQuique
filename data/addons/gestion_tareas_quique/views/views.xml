@@ -52,6 +52,24 @@
     </record>
 
 
+  <!-- listado de sprints-->
+   <record model="ir.ui.view" id="gestion_tareas_quique.list_sprints">
+    <field name="name">gestion_tareas_quique.sprints_quique.list</field>
+    <field name="model">gestion_tareas_quique.sprints_quique</field>
+    <field name="arch" type="xml">
+    <list decoration-danger="duracion &lt; 7" 
+    decoration-success="duracion == 14"
+    decoration-warning="duracion &lt; 15">
+            <field name="name"/>
+            <field name="descripcion"/>
+            <field name="duracion" sum="Total días"/>
+            <field name="fecha_ini"/>
+            <field name="fecha_fin"/>
+    <field name="activo" widget="boolean_toggle"/>
+        </list>
+    </field>
+</record>
+
      <record model="ir.ui.view" id="gestion_tareas_quique.view_partner_form_inherit">
       <field name="name">desarrolladores form</field>
       <field name="model">res.partner</field>

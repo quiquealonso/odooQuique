@@ -8,6 +8,7 @@ _logger = logging.getLogger(__name__)
 
 # MODELO PLATOS -----------------------------------------------------------------------
 class platos_quique(models.Model):      
+           
      _name = 'gest_rest.platos_quique'
      _description = 'gest_rest.platos_quique'
 
@@ -50,6 +51,14 @@ class platos_quique(models.Model):
           default=lambda self: fields.Date.today(self),    
      )   
 
+     es_caro = fields.Boolean(
+          string='Es caro',
+          compute='_compute_es_caro',
+           )
+     @api.depends('precio')
+     def _compute_es_caro(self):
+                for plato in self:
+                     plato.es_caro = plato.precio > 20
      # CAMPOS COMPUTADOS  -----------------------------------------------------------
      precio_final = fields.Float(
              string='Precio final del plato',
@@ -174,7 +183,7 @@ class platos_quique(models.Model):
                          raise ValidationError('El tiempo del cocinado tiene que ser entre 1 minuto y 4 horas')
 
 # MODELO MENÚ -----------------------------------------------------------------------
-class menu_quique(models.Model):
+class menu_quique(models.Model):      
      _name = 'gest_rest.menu_quique'
      _description = 'gest_rest.menu_quique'
 
@@ -212,6 +221,16 @@ class menu_quique(models.Model):
           default=False
      )
 
+     finalizado = fields.Boolean(
+          string='Finalizado',
+          compute='_compute_finalizado',
+     )
+
+     proximo_a_vencer = fields.Boolean(
+          string='Próximo a vencer',
+          compute='_compute_proximo_a_vencer',
+     )
+
      @api.depends('fecha_inicio', 'dias_disponibles')
      def _compute_finalizacion(self):
           for menu in self:
@@ -219,6 +238,22 @@ class menu_quique(models.Model):
                dias = menu.dias_disponibles or 7
                menu.fecha_fin = fecha_base + timedelta(days=dias)
 
+
+     @api.depends('fecha_fin')
+     def _compute_finalizado(self):
+                today = fields.Date.context_today(self)
+                for menu in self:
+                     menu.finalizado = menu.fecha_fin and menu.fecha_fin < today
+
+     @api.depends('fecha_fin')
+     def _compute_proximo_a_vencer(self):
+                today = fields.Date.context_today(self)
+                for menu in self:
+                     if menu.fecha_fin:
+                          delta = (menu.fecha_fin - today).days
+                          menu.proximo_a_vencer = 0 <= delta < 3
+                     else:
+                          menu.proximo_a_vencer = False
 
      
 
