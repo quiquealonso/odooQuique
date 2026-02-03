@@ -1,5 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_dronify_qap_dron,dronify_qap_dron,model_dronify_quique_dronify_quique,base.group_user,1,1,1,1
+access_dronify_qap_dron,dronify_qap_dron,model_dronify_qap_dron,base.group_user,1,1,1,1
 access_dronify_qap_paquete,dronify_qap_paquete,model_dronify_qap_paquete,base.group_user,1,1,1,1
 access_dronify_qap_vuelo,dronify_qap_vuelo,model_dronify_qap_vuelo,base.group_user,1,1,1,1
-

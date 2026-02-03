@@ -17,11 +17,37 @@
 
     <!-- actions opening views on models -->
 
+    <!-- abrir los drones -->
     <record model="ir.actions.act_window" id="abrir_drones">
-      <field name="name">Dronify_Quique window</field>
-      <field name="res_model">dronify_quique.dronify_quique</field>
+      <field name="name">Drones window</field>
+      <field name="res_model">dronify_qap_dron</field>
       <field name="view_mode">list,form</field>
     </record>
+
+    <!-- abrir los vuelos -->
+    <record model="ir.actions.act_window" id="abrir_vuelos">
+      <field name="name">Vuelos window</field>
+      <field name="res_model">dronify_qap_vuelo</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- abrir los paquetes -->
+    <record model="ir.actions.act_window" id="abrir_paquetes">
+      <field name="name">Paquetes window</field>
+      <field name="res_model">dronify_qap_paquete</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- abrir los contactos -->
+    <record model="ir.actions.act_window" id="abrir_contactos">
+      <field name="name">Contactos window</field>
+      <field name="res_model">res.partner</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+
+
+
 
 
     <!-- server action to the one above -->
@@ -46,14 +72,21 @@
     <!-- menu categories -->
 
     <menuitem name="Drones" id="dronify_quique.menu_drones" parent="menu_izquierda"/>
-    <menuitem name="Menu 2" id="dronify_quique.menu_2" parent="menu_izquierda"/>
+    <menuitem name="Vuelos" id="dronify_quique.menu_vuelos" parent="menu_izquierda"/>
+    <menuitem name="Paquetes" id="dronify_quique.menu_paquetes" parent="menu_izquierda"/>
+    <menuitem name="Contactos" id="dronify_quique.menu_contactos" parent="menu_izquierda"/>
+
 
     <!-- actions -->
 
-    <menuitem name="List" id="dronify_quique.menu_1_list" parent="dronify_quique.menu_drones"
+    <menuitem name="List" id="dronify_qap_dron" parent="dronify_quique.menu_drones"
               action="abrir_drones"/>
-    <!-- <menuitem name="Server to list" id="dronify_quique" parent="dronify_quique.menu_2"
-              action="dronify_quique.action_server"/>-->
+    <menuitem name="List" id="dronify_qap_vuelos" parent="dronify_quique.menu_vuelos"
+              action="abrir_vuelos"/>
+    <menuitem name="List" id="dronify_qap_paquetes" parent="dronify_quique.menu_paquetes"
+              action="abrir_paquetes"/>
+    <menuitem name="List" id="dronify_qap_contactos" parent="dronify_quique.menu_contactos"
+              action="abrir_contactos"/>
 
   </data>
 </odoo>
