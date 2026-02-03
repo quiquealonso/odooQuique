@@ -1,5 +1,5 @@
 {
-    'name': "HolaMundo_V3",
+    'name': "dronify_quique",
 
     'summary': "Short (1 phrase/line) summary of the module's purpose",
 
@@ -7,7 +7,7 @@
 Long description of module's purpose
     """,
 
-    'author': "My Company",
+    'author': "Quique",
     'website': "https://www.yourcompany.com",
 
     # Categories can be used to filter modules in modules listing
@@ -26,9 +26,6 @@ Long description of module's purpose
         #'views/templates.xml',
     ],
     # only loaded in demonstration mode
-    #'demo': [
-   #     'demo/demo.xml',
-    #],
     'installable': True,
     'application': True,
 }
