@@ -11,3 +11,9 @@
 - Hacer accesibles mediante vistas y formularios predefinidos todos los modelos
 - Hacer la herencia de res.partner
 - Definir algunas relaciones entre los modelos
+
+
+# Descripción 04/02 
+- Terminar los campos computados y related
+- Importar el logica dronify
+- Ordenar/organizar/identificar los campos de todos los modelos

@@ -1,5 +1,6 @@
 from odoo import models, fields, api
-
+from . import logica_dronify
+from datetime import datetime
 
 class dronify_qap_contactos(models.Model):
     _name = 'res.partner'
@@ -23,6 +24,8 @@ class dronify_qap_contactos(models.Model):
         string="Drones Autorizados",
     )
 
+    #####################CAMPOS RELACIONADOS#########################
+
     #relacion con los paquetes
     paquete = fields.One2many(
         'dronify_qap_paquete',
@@ -42,6 +45,7 @@ class dronify_qap_dron(models.Model):
 
     #Carga máxima en kilogramos(obligatorio)
     capacidad_max = fields.Float(
+        string="Capacidad Máxima",
         required=True
     )
 
@@ -62,6 +66,7 @@ class dronify_qap_dron(models.Model):
           default='disponible'
     )
 
+    #####################CAMPOS RELACIONADOS#########################
     #Pilotos certificados para este dron (relación inversa)
     piloto_autorizado_ids = fields.Many2many(
         'res.partner',
@@ -69,6 +74,8 @@ class dronify_qap_dron(models.Model):
         domain=[('es_piloto', '=', True)],
     )
 
+
+    #relacion con el paquete
     paquete = fields.One2many(
         'dronify_qap_paquete',
         'vuelo_id',
@@ -98,7 +105,8 @@ class dronify_qap_paquete(models.Model):
         string="Peso (kg)",
         required=True,
     )
-
+   
+    #####################CAMPOS RELACIONADOS#########################
     #Cliente que envía el paquete(al piloto) (obligado)
     cliente_id = fields.Many2one(
         'res.partner',
@@ -114,11 +122,14 @@ class dronify_qap_paquete(models.Model):
         readonly=True,
     )
 
-    #Nombre del dron del vuelo(campo Related, solo lectura Solo lectura)
-   # dron_relacionado = fields.related()
-       
-    #Nombre del dron del vuelo
-    #dron_relacionado = fields.Char()
+    #####################CAMPOS RELATED#########################
+
+    #Nombre del dron del vuelo(campo Related, solo lectura )
+    dron_relacionado = fields.Char(
+        string="Dron del Vuelo",
+        related='vuelo_id.dron_id.name',
+        readonly=True,
+    )
 
 
 
@@ -128,15 +139,30 @@ class dronify_qap_vuelo(models.Model):
 
     #Código único del vuelo
     codigo = fields.Char(
-        required=True,
         string="Código Vuelo",
+        default=datetime.now().strftime("%Y%m%d%H%M%S"),
         readonly=True,
+        store=True,
     )
 
+    #Denominación de la misión
     name = fields.Char(
         string="Denominación de la misión",
-       # default=datetime.now().strftime("Vuelo %Y-%m-%d %H:%M:%S"),
-       required=True,
+        default=datetime.now().strftime("%Y-%m-%d_Vuelo"),
+        required=True,
+        store=True,
+    )
+
+    #Indica si el vuelo está listo para ejecutarse
+    preparado = fields.Boolean(
+        string="Preparado para despegue",
+        store=True,
+    )
+
+    #Indica si el vuelo se ha completado
+    realizado = fields.Boolean(
+        string="Vuelo realizado",
+        store=True,
     )
 
     #dron asignado
@@ -144,14 +170,17 @@ class dronify_qap_vuelo(models.Model):
         'dronify_qap_dron',
         string="Dron Asignado",
         required=True,
+        store=True,
     )
 
+    #####################CAMPOS RELACIONADOS#########################
     #piloto asignado
     piloto_id = fields.Many2one(
         'res.partner',
         string="Piloto Asignado",
         required=True,
         domain=[('es_piloto', '=', True)],
+        store=True,
     )
 
     #paquetes a transportar
@@ -159,23 +188,29 @@ class dronify_qap_vuelo(models.Model):
         'dronify_qap_paquete',
         'vuelo_id',
         string="Paquetes Asignados",
+        store=True,
     )
 
-    #Indica si el vuelo está listo para ejecutarse
-    preparado = fields.Boolean(
-        string="Preparado para despegue",
-    )
-
-    #Indica si el vuelo se ha completado
-    realizado = fields.Boolean(
-        string="Vuelo realizado",
-    )
-
+    
+    #####################CAMPOS COMPUTADOS#########################
     #Suma del peso de todos los paquetes asignados (campo computado)
-    #peso_total = fields.computed()
+    peso_total = fields.Float(
+        string="Peso Total (kg)",
+        compute='_compute_peso_total',
+        store=True,
+    )
 
     #Porcentaje de batería que consumirá el vuelo (campo computado)
-    #consumo_estimado = fields.computed()
+    consumo_estimado = fields.Float(
+        string="Consumo Estimado (%)",
+        compute='logica_dronify._compute_consumo_estimado',
+        store=True,
+    )
+
+    @api.depends('paquetes_ids.peso')
+    def _compute_peso_total(self):
+        for vuelo in self:
+            vuelo.peso_total = sum(paquete.peso for paquete in vuelo.paquetes_ids)
 
 
 
