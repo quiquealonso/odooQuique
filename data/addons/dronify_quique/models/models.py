@@ -1,5 +1,5 @@
 from odoo import models, fields, api
-from . import logica_dronify
+from .logica_dronify import calcular_consumo_vuelo, validar_estado_bateria
 from datetime import datetime
 
 class dronify_qap_contactos(models.Model):
@@ -203,14 +203,19 @@ class dronify_qap_vuelo(models.Model):
     #Porcentaje de batería que consumirá el vuelo (campo computado)
     consumo_estimado = fields.Float(
         string="Consumo Estimado (%)",
-        compute='logica_dronify._compute_consumo_estimado',
+        #compute='calcular_consumo_vuelo',
         store=True,
+        #este campo va a utilziar un campo computado que va a utilizar el metodo del logica_dronify
     )
 
     @api.depends('paquetes_ids.peso')
     def _compute_peso_total(self):
         for vuelo in self:
             vuelo.peso_total = sum(paquete.peso for paquete in vuelo.paquetes_ids)
+
+    
+
+    
 
 
 

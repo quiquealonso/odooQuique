@@ -13,7 +13,12 @@
 - Definir algunas relaciones entre los modelos
 
 
-# Descripción 04/02 
+# Descripción 04/02 tarde en casa 
 - Terminar los campos computados y related
 - Importar el logica dronify
 - Ordenar/organizar/identificar los campos de todos los modelos
+
+# Descripción clase 06/02
+- Definicion de la vista de drones completa
+- Definicion de la vista de vuelos incompleta
+

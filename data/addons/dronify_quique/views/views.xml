@@ -14,8 +14,60 @@
       </field>
     </record>
 -->
+    <!-- vista para vuelo -->
+    <record model="ir.ui.view" id="vista_vuelo">
+      <field name="name">vista_vuelo list</field>
+      <field name="model">dronify_qap_vuelo</field>
+      <field name="arch" type="xml">
+        <list>
+          <field name="codigo"/>
+          <field name="name"/>
+          <field name="dron_id"/>
+          <field name="piloto_id"/>
+          <field name="peso_total"/>
+          <field name="consumo_estimado" widget="percentage" />
+          <field name="preparado" widget="boolean" class="text-center" />
+          <field name="realizado" widget="boolean" class="text-center"/>
+        </list>
+      </field>
+    </record>
+
+    <!-- vista para dron (falta que las filas sean rojas si la bateria<25 ) -->
+    
+    <record model="ir.ui.view" id="vista_dron">
+      <field name="name">vista_dron list</field>
+      <field name="model">dronify_qap_dron</field>
+      <field name="arch" type="xml">
+        <list decoration-danger="bateria &lt; 25">
+          <field name="name"/>
+          <field name="capacidad_max"/>
+          <field name="bateria" widget="progressbar"/>    
+          <field name="estado" widget="badge" 
+                 decoration-success="estado == 'disponible'"
+                 decoration-info="estado == 'vuelo'"
+                 decoration-warning="estado == 'taller'"/>          
+        </list>
+      </field>
+    </record>
+
+     <!-- vista para paquetes -->
+    <record model="ir.ui.view" id="vista_paquete">
+      <field name="name">vista_paquete list</field>
+      <field name="model">dronify_qap_paquete</field>
+      <field name="arch" type="xml">
+        <list>
+          <field name="codigo"/>
+          <field name="name"/>
+          <field name="peso"/>
+          <field name="cliente_id"/>
+          <field name="vuelo_id"/>
+          <field name="dron_relacionado"  />
+        </list>
+      </field>
+    </record>
 
     <!-- actions opening views on models -->
+
 
     <!-- abrir los drones -->
     <record model="ir.actions.act_window" id="abrir_drones">
@@ -38,8 +90,15 @@
       <field name="view_mode">list,form</field>
     </record>
 
-    <!-- abrir los contactos -->
-    <record model="ir.actions.act_window" id="abrir_contactos">
+    <!-- abrir los clientes -->
+    <record model="ir.actions.act_window" id="abrir_clientes">
+      <field name="name">Contactos window</field>
+      <field name="res_model">res.partner</field>
+      <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- abrir los pilotos -->
+    <record model="ir.actions.act_window" id="abrir_pilotos">
       <field name="name">Contactos window</field>
       <field name="res_model">res.partner</field>
       <field name="view_mode">list,form</field>
@@ -74,7 +133,9 @@
     <menuitem name="Drones" id="dronify_quique.menu_drones" parent="menu_izquierda"/>
     <menuitem name="Vuelos" id="dronify_quique.menu_vuelos" parent="menu_izquierda"/>
     <menuitem name="Paquetes" id="dronify_quique.menu_paquetes" parent="menu_izquierda"/>
-    <menuitem name="Contactos" id="dronify_quique.menu_contactos" parent="menu_izquierda"/>
+    <menuitem name="Clientes" id="dronify_quique.menu_clientes" parent="menu_izquierda"/>
+    <menuitem name="Pilotos" id="dronify_quique.menu_pilotos" parent="menu_izquierda"/>
+
 
 
     <!-- actions -->
@@ -85,8 +146,10 @@
               action="abrir_vuelos"/>
     <menuitem name="List" id="dronify_qap_paquetes" parent="dronify_quique.menu_paquetes"
               action="abrir_paquetes"/>
-    <menuitem name="List" id="dronify_qap_contactos" parent="dronify_quique.menu_contactos"
-              action="abrir_contactos"/>
+    <menuitem name="List" id="dronify_qap_clientes" parent="dronify_quique.menu_clientes"
+              action="abrir_clientes"/>
+    <menuitem name="List" id="dronify_qap_pilotos" parent="dronify_quique.menu_pilotos"
+              action="abrir_pilotos"/>
 
   </data>
 </odoo>
