@@ -32,7 +32,35 @@
       </field>
     </record>
 
-    <!-- vista para dron (falta que las filas sean rojas si la bateria<25 ) -->
+    <!-- formulario para vuelo (falta añadir la pestaña de paquetes)-->
+    <record model="ir.ui.view" id="vista_vuelo_form">
+      <field name="name">form_vuelo form</field>
+      <field name="model">dronify_qap_vuelo</field>
+      <field name="arch" type="xml">
+        <form>
+          <header>
+            <button name="action_preparar_vuelo" string="Preparar Vuelo" type="object" class="oe_highlight"/>
+            <button name="action_desbloquear" string="Iniciar Vuelo" type="object"/>
+            <button name="action_finalizar_vuelo" string="Finalizar Vuelo" type="object"/>
+          </header>
+          <sheet>
+            <group>
+              <group string="Planificación">
+                <field name="name"/>
+                <field name="dron_id"/>
+                <field name="piloto_id"/>
+              </group>
+              <group string="Estado y control">
+                <field name="preparado"/>
+                <field name="realizado"/>
+              </group>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <!-- vista para dron  -->
     
     <record model="ir.ui.view" id="vista_dron">
       <field name="name">vista_dron list</field>

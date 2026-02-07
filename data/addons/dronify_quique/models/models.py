@@ -203,9 +203,8 @@ class dronify_qap_vuelo(models.Model):
     #Porcentaje de batería que consumirá el vuelo (campo computado)
     consumo_estimado = fields.Float(
         string="Consumo Estimado (%)",
-        #compute='calcular_consumo_vuelo',
+        compute='_compute_consumo_estimado',
         store=True,
-        #este campo va a utilziar un campo computado que va a utilizar el metodo del logica_dronify
     )
 
     @api.depends('paquetes_ids.peso')
@@ -213,9 +212,24 @@ class dronify_qap_vuelo(models.Model):
         for vuelo in self:
             vuelo.peso_total = sum(paquete.peso for paquete in vuelo.paquetes_ids)
 
-    
+    @api.depends('peso_total', 'paquetes_ids')
+    def _compute_consumo_estimado(self):
+        for vuelo in self:
+            es_vip = any(paquete.cliente_id.es_vip for paquete in vuelo.paquetes_ids)
+            vuelo.consumo_estimado = calcular_consumo_vuelo(vuelo.peso_total, es_vip)
 
-    
+    #####################MÉTODOS DE ACCIÓN#########################
+    def action_preparar_vuelo(self):
+        for vuelo in self:
+            vuelo.preparado = True
+
+    def action_desbloquear(self):
+        for vuelo in self:
+            vuelo.preparado = False
+
+    def action_finalizar_vuelo(self):
+        for vuelo in self:
+            vuelo.realizado = True
 
 
 

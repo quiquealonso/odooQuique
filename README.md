@@ -22,3 +22,5 @@
 - Definicion de la vista de drones completa
 - Definicion de la vista de vuelos incompleta
 
+# Descripción 07/02 tarde en casa
+- Terminar la vista de vuelos y el empezar formulario de vuelos (a falta de la pestaña paquetes)
