@@ -24,3 +24,20 @@
 
 # Descripción 07/02 tarde en casa
 - Terminar la vista de vuelos y el empezar formulario de vuelos (a falta de la pestaña paquetes)
+
+# Descripción 07/02 tarde en casa
+- Terminar la pestaña de paquetes y el footer de la vista de vuelos
+- Definir la vista de clientes y pilotos 
+
+# Descripción clase 10/02
+- Definir los formularios de clientes y pilotos
+- Empezar la logica de los vuelos
+
+
+# Faltan por hacer:
+- Terminar toda la logica de comprobacion de los vuelos
+- Terminar la vista de los vuelos con todas sus peculiaridades
+- Algo mas que no me acuerdo ahora mismo
+- Revisar la duplicidad de los formularios piloto   y cliente
+- revisar el codigo de paquete que no se crea
+- vista de dron

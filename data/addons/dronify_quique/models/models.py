@@ -7,16 +7,20 @@ class dronify_qap_contactos(models.Model):
     _inherit = 'res.partner'
 
     #Identifica si el contacto es cliente
-    es_cliente = fields.Boolean(string="Es Cliente")
+    es_cliente = fields.Boolean(string="¿Es Cliente?")
 
     #Marca clientes premium (activa modo ahorro en vuelos)
-    es_vip = fields.Boolean(string="Es vip")
+    es_vip = fields.Boolean(string="¿Es vip?")
 
     #Identifica si el contacto es piloto
-    es_piloto = fields.Boolean(string="Es Piloto")
+    es_piloto = fields.Boolean(string="¿Es Piloto?")
 
     #Número de licencia del piloto (obligatorio solo para pilotos)
-    licencia = fields.Char(string="Licencia de Piloto")
+    licencia = fields.Char(
+        string="Nº de licencia",
+        requiered=es_piloto,
+        
+    )
 
     #Lista de drones que el piloto está certificado para operar
     dron_autorizado_ids = fields.Many2many(
@@ -92,6 +96,7 @@ class dronify_qap_paquete(models.Model):
         required=True,
         string="Código Paquete",
         readonly=True,
+        default=datetime.now().strftime("%Y%m%d%H%M%S"),
     )
  
     #Descripción del contenido
@@ -110,7 +115,7 @@ class dronify_qap_paquete(models.Model):
     #Cliente que envía el paquete(al piloto) (obligado)
     cliente_id = fields.Many2one(
         'res.partner',
-        string="Cliente Remitente",
+        string="Cliente",
         required=True,
         domain=[('es_cliente', '=', True)],
     )
@@ -222,14 +227,20 @@ class dronify_qap_vuelo(models.Model):
     def action_preparar_vuelo(self):
         for vuelo in self:
             vuelo.preparado = True
+            vuelo.estado_dron = 'vuelo'
 
     def action_desbloquear(self):
         for vuelo in self:
-            vuelo.preparado = False
+            if not vuelo.realizado:
+                vuelo.preparado = False
+                vuelo.estado_dron = 'disponible'
 
     def action_finalizar_vuelo(self):
         for vuelo in self:
-            vuelo.realizado = True
+            if vuelo.preparado:
+                vuelo.realizado = True
+                vuelo.dron_id.bateria -= vuelo.consumo_estimado
+                vuelo.dron_id.estado = 'disponible'
 
 
 

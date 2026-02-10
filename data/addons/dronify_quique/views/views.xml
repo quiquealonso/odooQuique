@@ -1,19 +1,36 @@
 <odoo>
   <data>
     <!-- explicit list view definition -->
-<!--
-    <record model="ir.ui.view" id="dronify_quique.list">
-      <field name="name">dronify_quique list</field>
-      <field name="model">dronify_quique.dronify_quique</field>
-      <field name="arch" type="xml">
-        <list>
-          <field name="name"/>
-          <field name="value"/>
-          <field name="value2"/>
-        </list>
-      </field>
-    </record>
--->
+
+     <!--Vista del res partner heredada para pilots-->
+   <record model="ir.ui.view" id="pilotos_list">
+    <field name="name">pilotos list</field>
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_partner_tree"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='complete_name']" position="after">
+            <field name="licencia"/>
+        </xpath>
+        <xpath expr="//field[@name='country_id']" position="attributes">
+            <attribute name="column_invisible">1</attribute>
+        </xpath>
+    </field>
+  </record>
+
+  <!--Vista del res partner heredada para clientes-->
+  <record model="ir.ui.view" id="clientes_list">
+    <field name="name">clientes list</field>
+    <field name="model">res.partner</field>
+    <field name="inherit_id" ref="base.view_partner_tree"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='country_id']" position="after">
+            <field name="es_vip"/>
+        </xpath>
+        <xpath expr="//field[@name='phone']" position="attributes">
+            <attribute name="column_invisible">1</attribute>
+        </xpath>
+    </field>
+  </record>
     <!-- vista para vuelo -->
     <record model="ir.ui.view" id="vista_vuelo">
       <field name="name">vista_vuelo list</field>
@@ -25,43 +42,13 @@
           <field name="dron_id"/>
           <field name="piloto_id"/>
           <field name="peso_total"/>
-          <field name="consumo_estimado" widget="percentage" />
-          <field name="preparado" widget="boolean" class="text-center" />
+          <field name="consumo_estimado" widget="monetary" options="{'symbol': '%'}" readonly="1"/>          <field name="preparado" widget="boolean" class="text-center" />
           <field name="realizado" widget="boolean" class="text-center"/>
         </list>
       </field>
     </record>
 
-    <!-- formulario para vuelo (falta añadir la pestaña de paquetes)-->
-    <record model="ir.ui.view" id="vista_vuelo_form">
-      <field name="name">form_vuelo form</field>
-      <field name="model">dronify_qap_vuelo</field>
-      <field name="arch" type="xml">
-        <form>
-          <header>
-            <button name="action_preparar_vuelo" string="Preparar Vuelo" type="object" class="oe_highlight"/>
-            <button name="action_desbloquear" string="Iniciar Vuelo" type="object"/>
-            <button name="action_finalizar_vuelo" string="Finalizar Vuelo" type="object"/>
-          </header>
-          <sheet>
-            <group>
-              <group string="Planificación">
-                <field name="name"/>
-                <field name="dron_id"/>
-                <field name="piloto_id"/>
-              </group>
-              <group string="Estado y control">
-                <field name="preparado"/>
-                <field name="realizado"/>
-              </group>
-            </group>
-          </sheet>
-        </form>
-      </field>
-    </record>
-
     <!-- vista para dron  -->
-    
     <record model="ir.ui.view" id="vista_dron">
       <field name="name">vista_dron list</field>
       <field name="model">dronify_qap_dron</field>
@@ -94,9 +81,121 @@
       </field>
     </record>
 
+    <!-- formulario para vuelo -->
+    <!--Los campos de planificación (name, dron_id, piloto_id) deben bloquearse cuando el vuelo esté preparado -->
+    <!-- Lista de paquetes asignados (bloqueada cuando el vuelo esté preparado)-->
+    <record model="ir.ui.view" id="vista_vuelo_form">
+      <field name="name">form_vuelo form</field>
+      <field name="model">dronify_qap_vuelo</field>
+      <field name="arch" type="xml">
+        <form>
+          <header>
+            <button name="action_preparar_vuelo" string="Preparar Vuelo" type="object" class="oe_highlight"/>
+            <button name="action_desbloquear" string="Modificar Datos" type="object"/>
+            <button name="action_finalizar_vuelo" string="Marcar como Realizado" type="object"/>
+          </header>
+          <sheet>
+            <group>
+              <group string="Planificación">
+                <field name="name" readonly="preparado"/>
+                <field name="dron_id"  readonly="preparado"/>
+                <field name="piloto_id"  readonly="preparado"/>
+              </group>
+              <group string="Estado y control">
+                <field name="preparado" readonly ="1"/>
+                <field name="realizado" readonly ="1"/>
+              </group>
+            </group>
+            <notebook>
+              <page string="Paquetes">
+                <field name="paquetes_ids" readonly="preparado" />
+                <group>
+                  <group>
+                    <field name="peso_total" readonly="1"/>
+                    <field name="consumo_estimado" widget="monetary" options="{'symbol': '%'}" readonly="1"/>                  </group>
+                </group>
+              </page>
+            </notebook>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <!-- formulario para pilotos -->
+    <record model="ir.ui.view" id="form_piloto">
+      <field name="name">form_piloto form</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="base.view_partner_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='function']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//field[@name='website']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//page[@name='contact_addresses']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//page[@name='sales_purchases']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//page[@name='internal_notes']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//notebook" position="before">
+          <group string="Roles en dronify">
+            <group>
+              <field name="es_piloto" readonly="1"/>
+              <field name="licencia" required ="es_piloto"/> 
+              <field name="dron_autorizado_ids" widget="many2many_tags" />
+            </group>
+            <group>
+              <field name="es_cliente"/>
+              <field name="es_vip" invisible="not es_cliente"/> 
+            </group>
+          </group>
+        </xpath>
+      </field>
+    </record>
+
+
+    <!-- formulario para clientes -->
+    <record model="ir.ui.view" id="form_cliente">
+      <field name="name">form_cliente form</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="base.view_partner_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='function']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//field[@name='website']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//page[@name='contact_addresses']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//page[@name='sales_purchases']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//page[@name='internal_notes']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//notebook" position="before">
+          <group string="Roles en dronify">
+            <group> 
+              <field name="es_cliente" readonly="1"/>
+              <field name="es_vip" invisible="not es_cliente" />
+            </group>
+            <group>
+              <field name="es_piloto"/>
+              <field name="licencia" required="es_piloto" invisible="not es_piloto"/>            
+          </group>
+          </group>
+        </xpath>
+      </field>
+    </record>
+
     <!-- actions opening views on models -->
-
-
     <!-- abrir los drones -->
     <record model="ir.actions.act_window" id="abrir_drones">
       <field name="name">Drones window</field>
@@ -120,38 +219,22 @@
 
     <!-- abrir los clientes -->
     <record model="ir.actions.act_window" id="abrir_clientes">
-      <field name="name">Contactos window</field>
+      <field name="name">Clientes</field>
       <field name="res_model">res.partner</field>
       <field name="view_mode">list,form</field>
+      <field name="domain">[('es_cliente', '=', True)]</field>
+      <field name="context">{'default_es_cliente': True, 'form_view_ref': 'dronify_quique.form_cliente'}</field>
     </record>
 
     <!-- abrir los pilotos -->
     <record model="ir.actions.act_window" id="abrir_pilotos">
-      <field name="name">Contactos window</field>
+      <field name="name">Pilotos</field>
       <field name="res_model">res.partner</field>
       <field name="view_mode">list,form</field>
+      <field name="domain">[('es_piloto', '=', True)]</field>
+      <field name="context">{'default_es_piloto': True, 'form_view_ref': 'dronify_quique.form_piloto'}</field>
     </record>
 
-
-
-
-
-
-    <!-- server action to the one above -->
-<!--
-    <record model="ir.actions.server" id="dronify_quique.action_server">
-      <field name="name">dronify_quique server</field>
-      <field name="model_id" ref="model_dronify_quique_dronify_quique"/>
-      <field name="state">code</field>
-      <field name="code">
-        action = {
-          "type": "ir.actions.act_window",
-          "view_mode": "list,form",
-          "res_model": model._name,
-        }
-      </field>
-    </record>
--->
 
     <!-- Top menu item, Nombre que sale en el menu de la esquina izquierda -->
     <menuitem name="Dronify_QUIQUE" id="menu_izquierda"/>
