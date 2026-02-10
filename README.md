@@ -33,11 +33,14 @@
 - Definir los formularios de clientes y pilotos
 - Empezar la logica de los vuelos
 
-
-# Faltan por hacer:
+# Descripcion 10/02 tarde en casa
 - Terminar toda la logica de comprobacion de los vuelos
 - Terminar la vista de los vuelos con todas sus peculiaridades
-- Algo mas que no me acuerdo ahora mismo
-- Revisar la duplicidad de los formularios piloto   y cliente
-- revisar el codigo de paquete que no se crea
-- vista de dron
+- Hacer que se cree el codigo del paquete
+- Vista de dron (quitarle la relacion al modelo, y limitar la bateria de 0 a 100)
+- Redifinir los actions de las vistas/formulario de cliente y pilotos para intenar arreglar la solapa (no lo he conseguido)
+
+# Dudas:
+- se me solapan los formularios de piloto y cliente. el del cliente es correcto, pero piloto
+es como que coge lo de piloto y aparte lo de cliente. 
+- ¿hay que deshabilitar el formulario para crear paquetes? "No se modifica nada y no hay vista de formulario" o simplemente es que lo dejemos default

@@ -2,7 +2,7 @@
   <data>
     <!-- explicit list view definition -->
 
-     <!--Vista del res partner heredada para pilots-->
+     <!--Vista del res partner heredada para pilots
    <record model="ir.ui.view" id="pilotos_list">
     <field name="name">pilotos list</field>
     <field name="model">res.partner</field>
@@ -15,9 +15,9 @@
             <attribute name="column_invisible">1</attribute>
         </xpath>
     </field>
-  </record>
+  </record>-->
 
-  <!--Vista del res partner heredada para clientes-->
+  <!--Vista del res partner heredada para clientes
   <record model="ir.ui.view" id="clientes_list">
     <field name="name">clientes list</field>
     <field name="model">res.partner</field>
@@ -30,7 +30,7 @@
             <attribute name="column_invisible">1</attribute>
         </xpath>
     </field>
-  </record>
+  </record>-->
     <!-- vista para vuelo -->
     <record model="ir.ui.view" id="vista_vuelo">
       <field name="name">vista_vuelo list</field>
@@ -81,8 +81,33 @@
       </field>
     </record>
 
+    <!-- formulario para dron -->
+    <record model="ir.ui.view" id="dron_form">
+      <field name="name">form_dron form</field>
+      <field name="model">dronify_qap_dron</field>
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+            <group>
+              <group>
+                <field name="name"/>
+                <field name="bateria" min="0" max="100"/>
+              </group>
+              <group>
+                <field name="capacidad_max"/>
+                <field name="estado"/>
+              </group>  
+            </group> 
+            <group>
+              <field name="piloto_autorizado_ids" />
+            </group>   
+          </sheet>
+        </form>
+      </field>
+    </record>
+
     <!-- formulario para vuelo -->
-    <!--Los campos de planificación (name, dron_id, piloto_id) deben bloquearse cuando el vuelo esté preparado -->
+    <!--  Los campos de planificación (name, dron_id, piloto_id) deben bloquearse cuando el vuelo esté preparado -->
     <!-- Lista de paquetes asignados (bloqueada cuando el vuelo esté preparado)-->
     <record model="ir.ui.view" id="vista_vuelo_form">
       <field name="name">form_vuelo form</field>
@@ -90,9 +115,9 @@
       <field name="arch" type="xml">
         <form>
           <header>
-            <button name="action_preparar_vuelo" string="Preparar Vuelo" type="object" class="oe_highlight"/>
-            <button name="action_desbloquear" string="Modificar Datos" type="object"/>
-            <button name="action_finalizar_vuelo" string="Marcar como Realizado" type="object"/>
+            <button name="action_preparar_vuelo" string="Preparar Vuelo" type="object" invisilbe="preparado" class="oe_highlight"/>
+            <button name="action_desbloquear" string="Modificar Datos" invisible="not preparado" type="object"/>
+            <button name="action_finalizar_vuelo" string="Marcar como Realizado" invisible="not preparado" type="object" />
           </header>
           <sheet>
             <group>
@@ -214,10 +239,10 @@
     <record model="ir.actions.act_window" id="abrir_paquetes">
       <field name="name">Paquetes window</field>
       <field name="res_model">dronify_qap_paquete</field>
-      <field name="view_mode">list,form</field>
+      <field name="view_mode">list</field>
     </record>
 
-    <!-- abrir los clientes -->
+    <!--PARTE DE LOS CLIENTES -->
     <record model="ir.actions.act_window" id="abrir_clientes">
       <field name="name">Clientes</field>
       <field name="res_model">res.partner</field>
@@ -225,8 +250,24 @@
       <field name="domain">[('es_cliente', '=', True)]</field>
       <field name="context">{'default_es_cliente': True, 'form_view_ref': 'dronify_quique.form_cliente'}</field>
     </record>
+    <!-- abrir los clientes list -->
+    <record model="ir.actions.act_window.view" id="abrir_clientes_list">
+      <field name="sequence" eval="1"/>
+      <field name="view_mode">list</field>
+      <field name="view_id" ref="base.view_partner_tree"/>
+      <field name="act_window_id" ref="abrir_clientes"/>
+     </record>  
+    <!-- abrir los clientes form-->
+    <record model="ir.actions.act_window.view" id="abrir_clientes_form">
+      <field name="sequence" eval="2"/>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="form_cliente"/>
+      <field name="act_window_id" ref="abrir_clientes"/>
+   </record>
+    
 
-    <!-- abrir los pilotos -->
+    
+    <!-- PARTE DE LOS PILOTOS -->
     <record model="ir.actions.act_window" id="abrir_pilotos">
       <field name="name">Pilotos</field>
       <field name="res_model">res.partner</field>
@@ -234,6 +275,21 @@
       <field name="domain">[('es_piloto', '=', True)]</field>
       <field name="context">{'default_es_piloto': True, 'form_view_ref': 'dronify_quique.form_piloto'}</field>
     </record>
+    <!-- abrir los pilotos list-->
+    <record model="ir.actions.act_window.view" id="abrir_pilotos_list">
+      <field name="sequence" eval="1"/>
+      <field name="view_mode">list</field>
+      <field name="view_id" ref="base.view_partner_tree"/>
+      <field name="act_window_id" ref="abrir_pilotos"/>
+    </record>
+    <!-- abrir los pilotos form -->
+    <record model="ir.actions.act_window.view" id="abrir_pilotos_form">
+      <field name="sequence" eval="2"/>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="form_piloto"/>
+      <field name="act_window_id" ref="abrir_pilotos"/>
+    </record>
+
 
 
     <!-- Top menu item, Nombre que sale en el menu de la esquina izquierda -->
