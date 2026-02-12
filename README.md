@@ -40,7 +40,6 @@
 - Vista de dron (quitarle la relacion al modelo, y limitar la bateria de 0 a 100)
 - Redifinir los actions de las vistas/formulario de cliente y pilotos para intenar arreglar la solapa (no lo he conseguido)
 
-# Dudas:
-- se me solapan los formularios de piloto y cliente. el del cliente es correcto, pero piloto
-es como que coge lo de piloto y aparte lo de cliente. 
-- ¿hay que deshabilitar el formulario para crear paquetes? "No se modifica nada y no hay vista de formulario" o simplemente es que lo dejemos default
+# Resolver dudas dia 12/02
+- quitar el form del action de paquetes (sigue apareciendo el boton)
+- poner el mode primary en el formulario de pilotos
