@@ -115,9 +115,9 @@
       <field name="arch" type="xml">
         <form>
           <header>
-            <button name="action_preparar_vuelo" string="Preparar Vuelo" type="object" invisilbe="preparado" class="oe_highlight"/>
-            <button name="action_desbloquear" string="Modificar Datos" invisible="not preparado" type="object"/>
-            <button name="action_finalizar_vuelo" string="Marcar como Realizado" invisible="not preparado" type="object" />
+            <button name="action_preparar_vuelo" string="Preparar Vuelo" type="object" invisible="preparado or realizado"  class="oe_highlight"/>
+            <button name="action_desbloquear" string="Modificar Datos" invisible="not preparado or realizado"  type="object"/>
+            <button name="action_finalizar_vuelo" string="Marcar como Realizado" invisible="not preparado or realizado" type="object" class="oe_highlight"/>
           </header>
           <sheet>
             <group>

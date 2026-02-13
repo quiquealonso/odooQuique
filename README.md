@@ -43,3 +43,7 @@
 # Resolver dudas dia 12/02
 - quitar el form del action de paquetes (sigue apareciendo el boton)
 - poner el mode primary en el formulario de pilotos
+
+# Clase 13/02
+- Terminar el formulario de los vuelos con sus botones (la logica que habia no era correcta)
+- Hacer datos de pruba

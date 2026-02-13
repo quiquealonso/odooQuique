@@ -244,12 +244,12 @@ class dronify_qap_vuelo(models.Model):
             
             #Debe tener al menos un paquete asignado
             if not vuelo.paquetes_ids:
-                raise ValidationError("El vuelo debe tener al menos un paquete asignado.")
+                raise ValidationError("El vuelo debe tener al menos un paquete.")
             
             #El peso total no puede superar la capacidad máxima del dron
             if vuelo.peso_total > vuelo.dron_id.capacidad_max:
                 raise ValidationError(
-                    f"El peso total ({vuelo.peso_total} kg) supera la capacidad máxima del dron "
+                    f"¡ERROR DE CARGA! El peso total ({vuelo.peso_total} kg) supera la capacidad del dron "
                     f"({vuelo.dron_id.capacidad_max} kg)."
                 )      
             #El dron debe estar en estado 'disponible'
@@ -261,14 +261,13 @@ class dronify_qap_vuelo(models.Model):
             #La batería actual del dron debe ser mayor o igual al consumo estimado
             if vuelo.dron_id.bateria < vuelo.consumo_estimado:
                 raise ValidationError(
-                    f"Batería insuficiente. El dron tiene {vuelo.dron_id.bateria}% de batería "
-                    f"pero el vuelo requiere {vuelo.consumo_estimado}%."
+                    f"¡BATERIA INSUFICIENTE!. Se requiere {vuelo.consumo_estimado}% y el dron solo tiene {vuelo.dron_id.bateria}% "
+              
                 )
-            
             #El piloto debe tener el dron asignado en su lista de "Drones Autorizados"
             if vuelo.dron_id not in vuelo.piloto_id.dron_autorizado_ids:
                 raise ValidationError(
-                    f"El piloto '{vuelo.piloto_id.name}' no está certificado para operar el dron '{vuelo.dron_id.name}'."
+                    f"¡PILOTO NO AUTORIZADO PARA ESTE EQUIPO! El piloto '{vuelo.piloto_id.name}' no tiene certificación para manejar el dron '{vuelo.dron_id.name}'."
                 )
             
 
@@ -280,7 +279,7 @@ class dronify_qap_vuelo(models.Model):
         for vuelo in self:
             if not vuelo.realizado:
                 vuelo.preparado = False
-                vuelo.estado_dron = 'disponible'
+                vuelo.dron_id.estado = 'disponible'
 
     def action_finalizar_vuelo(self):
         for vuelo in self:
