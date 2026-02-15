@@ -47,3 +47,9 @@
 # Clase 13/02
 - Terminar el formulario de los vuelos con sus botones (la logica que habia no era correcta)
 - Hacer datos de pruba
+
+# Corregir errores 15/02 Entrega final
+- Quitar la relacion que habia de mas entre el dron y vuelo
+- Quitar los strore = True que habia de mas en las relaciones (dejar solo los related y los indicado en el ejercicio)
+- Al quietar el store= True en el codigo de Vuelo, he visto que ahora si que se asigna el codigo bien, verás que muchos vuelos tienen el mismo codigo, a partir de ahora ya funciona bien la asignacion de esto
+- Añadir el api.constrains en el metodo de preparar vuelo, que no estaba, y cambiar la logia del metodo para que funciones

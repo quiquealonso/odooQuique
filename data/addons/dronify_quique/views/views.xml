@@ -59,8 +59,7 @@
           <field name="bateria" widget="progressbar"/>    
           <field name="estado" widget="badge" 
                  decoration-success="estado == 'disponible'"
-                 decoration-info="estado == 'vuelo'"
-                 decoration-warning="estado == 'taller'"/>          
+                 decoration-warning="estado == 'vuelo'"/>          
         </list>
       </field>
     </record>
@@ -76,7 +75,7 @@
           <field name="peso"/>
           <field name="cliente_id"/>
           <field name="vuelo_id"/>
-          <field name="dron_relacionado"  />
+          <field name="dron_relacionado"/>
         </list>
       </field>
     </record>
